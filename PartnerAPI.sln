@@ -6,6 +6,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Partner.Api", "src\Partner.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Partner.Api.Tests", "tests\Partner.Api.Tests\Partner.Api.Tests.csproj", "{7A8F7932-2339-4288-BFC9-4A76CF1CE8BF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shipping.Partner.Integration", "src\Shipping.Partner.Integration\Shipping.Partner.Integration.csproj", "{C3F09F68-6E1A-4F3B-B8D0-6E92EF1CC8C4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shipping.Partner.Integration.Tests", "tests\Shipping.Partner.Integration.Tests\Shipping.Partner.Integration.Tests.csproj", "{D70FA6A8-1D67-4B2F-BC67-9917EC4B4B01}"
+EndProject
 Global
     GlobalSection(SolutionConfigurationPlatforms) = preSolution
         Debug|Any CPU = Debug|Any CPU
@@ -20,5 +24,13 @@ Global
         {7A8F7932-2339-4288-BFC9-4A76CF1CE8BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
         {7A8F7932-2339-4288-BFC9-4A76CF1CE8BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
         {7A8F7932-2339-4288-BFC9-4A76CF1CE8BF}.Release|Any CPU.Build.0 = Release|Any CPU
+        {C3F09F68-6E1A-4F3B-B8D0-6E92EF1CC8C4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+        {C3F09F68-6E1A-4F3B-B8D0-6E92EF1CC8C4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+        {C3F09F68-6E1A-4F3B-B8D0-6E92EF1CC8C4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+        {C3F09F68-6E1A-4F3B-B8D0-6E92EF1CC8C4}.Release|Any CPU.Build.0 = Release|Any CPU
+        {D70FA6A8-1D67-4B2F-BC67-9917EC4B4B01}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+        {D70FA6A8-1D67-4B2F-BC67-9917EC4B4B01}.Debug|Any CPU.Build.0 = Debug|Any CPU
+        {D70FA6A8-1D67-4B2F-BC67-9917EC4B4B01}.Release|Any CPU.ActiveCfg = Release|Any CPU
+        {D70FA6A8-1D67-4B2F-BC67-9917EC4B4B01}.Release|Any CPU.Build.0 = Release|Any CPU
     EndGlobalSection
 EndGlobal

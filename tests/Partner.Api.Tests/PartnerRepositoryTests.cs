@@ -1,3 +1,5 @@
+using Xunit;
+
 namespace Partner.Api.Tests;
 
 public class PartnerRepositoryTests
