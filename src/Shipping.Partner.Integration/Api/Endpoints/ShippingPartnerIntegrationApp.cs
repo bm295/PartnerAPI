@@ -1,6 +1,9 @@
 using Shipping.Partner.Integration.Api.Middleware;
-using Shipping.Partner.Integration.Application.Abstractions;
+using Shipping.Partner.Integration.Application.Commands;
+using Shipping.Partner.Integration.Application.Cqrs;
+using Shipping.Partner.Integration.Application.Queries;
 using Shipping.Partner.Integration.Application.Requests;
+using Shipping.Partner.Integration.Domain;
 
 namespace Shipping.Partner.Integration.Api.Endpoints;
 
@@ -17,65 +20,64 @@ public static class ShippingPartnerIntegrationApp
 
         app.MapPost("/shipping-partners/connect", (
             ConnectShippingPartnerRequest request,
-            IShippingPartnerRepository repository) =>
+            ICommandHandler<ConnectShippingPartnerCommand, ShippingPartnerConnection> handler) =>
         {
-            var partner = repository.Connect(request);
+            var partner = handler.Handle(new ConnectShippingPartnerCommand(request.Name, request.ExternalReference));
             return Results.Created($"/shipping-partners/{partner.Id}", partner);
         });
 
-        app.MapGet("/shipping-partners", (IShippingPartnerRepository repository) =>
-            Results.Ok(repository.GetAll()));
+        app.MapGet("/shipping-partners", (
+            IQueryHandler<GetShippingPartnersQuery, IReadOnlyCollection<ShippingPartnerConnection>> handler) =>
+            Results.Ok(handler.Handle(new GetShippingPartnersQuery())));
 
-        app.MapGet("/shipping-partners/{id:guid}", (Guid id, IShippingPartnerRepository repository) =>
+        app.MapGet("/shipping-partners/{id:guid}", (
+            Guid id,
+            IQueryHandler<GetShippingPartnerByIdQuery, ShippingPartnerConnection?> handler) =>
         {
-            var partner = repository.GetById(id);
+            var partner = handler.Handle(new GetShippingPartnerByIdQuery(id));
             return partner is null ? Results.NotFound() : Results.Ok(partner);
         });
 
         app.MapPost("/shipments/events", (
             ShipmentEventRequest request,
-            IShipmentEventStore store,
-            IShippingPartnerRepository repository) =>
+            ICommandHandler<RecordShipmentEventCommand, CommandResult<ShipmentEventRecord>> handler) =>
         {
-            if (!repository.Exists(request.PartnerId))
-            {
-                return Results.BadRequest(new { error = "Unknown partner." });
-            }
+            var result = handler.Handle(new RecordShipmentEventCommand(
+                request.PartnerId,
+                request.TrackingNumber,
+                request.Status,
+                request.Location,
+                request.OccurredAtUtc));
 
-            var eventRecord = store.Append(request);
-            return Results.Accepted($"/shipments/events/{eventRecord.Id}", eventRecord);
+            return result.Succeeded
+                ? Results.Accepted($"/shipments/events/{result.Value!.Id}", result.Value)
+                : Results.BadRequest(new { error = result.Error });
         });
 
-        app.MapGet("/shipments/events", (IShipmentEventStore store, Guid? partnerId) =>
-        {
-            var events = partnerId is null ? store.GetAll() : store.GetByPartnerId(partnerId.Value);
-            return Results.Ok(events);
-        });
+        app.MapGet("/shipments/events", (
+            IQueryHandler<GetShipmentEventsQuery, IReadOnlyCollection<ShipmentEventRecord>> handler,
+            Guid? partnerId) => Results.Ok(handler.Handle(new GetShipmentEventsQuery(partnerId))));
 
         app.MapPost("/shipping-orders", (
             CreateShippingOrderRequest request,
-            IShippingPartnerRepository partnerRepository,
-            IShippingOrderRepository orderRepository) =>
+            ICommandHandler<CreateShippingOrderCommand, CommandResult<ShippingOrder>> handler) =>
         {
-            if (!partnerRepository.Exists(request.PartnerId))
-            {
-                return Results.BadRequest(new { error = "Unknown partner." });
-            }
+            var result = handler.Handle(new CreateShippingOrderCommand(
+                request.PartnerId,
+                request.OrderNumber,
+                request.DestinationName,
+                request.DestinationAddress,
+                request.ServiceLevel,
+                request.TotalWeightKg));
 
-            if (request.TotalWeightKg <= 0)
-            {
-                return Results.BadRequest(new { error = "TotalWeightKg must be greater than zero." });
-            }
-
-            var order = orderRepository.Create(request);
-            return Results.Created($"/shipping-orders/{order.Id}", order);
+            return result.Succeeded
+                ? Results.Created($"/shipping-orders/{result.Value!.Id}", result.Value)
+                : Results.BadRequest(new { error = result.Error });
         });
 
-        app.MapGet("/shipping-orders", (IShippingOrderRepository orderRepository, Guid? partnerId) =>
-        {
-            var orders = partnerId is null ? orderRepository.GetAll() : orderRepository.GetByPartnerId(partnerId.Value);
-            return Results.Ok(orders);
-        });
+        app.MapGet("/shipping-orders", (
+            IQueryHandler<GetShippingOrdersQuery, IReadOnlyCollection<ShippingOrder>> handler,
+            Guid? partnerId) => Results.Ok(handler.Handle(new GetShippingOrdersQuery(partnerId))));
 
         return app;
     }
