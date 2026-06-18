@@ -1,5 +1,6 @@
 using System.Collections.Concurrent;
-using Shipping.Partner.Integration.Application;
+using Shipping.Partner.Integration.Application.Abstractions;
+using Shipping.Partner.Integration.Application.Requests;
 using Shipping.Partner.Integration.Domain;
 
 namespace Shipping.Partner.Integration.Infrastructure;

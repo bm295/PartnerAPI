@@ -1,5 +1,6 @@
 using Shipping.Partner.Integration.Api.Middleware;
-using Shipping.Partner.Integration.Application;
+using Shipping.Partner.Integration.Application.Abstractions;
+using Shipping.Partner.Integration.Application.Requests;
 
 namespace Shipping.Partner.Integration.Api.Endpoints;
 

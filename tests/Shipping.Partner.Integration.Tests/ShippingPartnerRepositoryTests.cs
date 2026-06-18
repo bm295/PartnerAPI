@@ -1,5 +1,5 @@
 using Xunit;
-using Shipping.Partner.Integration.Application;
+using Shipping.Partner.Integration.Application.Requests;
 using Shipping.Partner.Integration.Infrastructure;
 
 namespace Shipping.Partner.Integration.Tests;

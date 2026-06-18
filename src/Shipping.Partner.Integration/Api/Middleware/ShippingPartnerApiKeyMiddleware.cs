@@ -1,5 +1,6 @@
 using Microsoft.Extensions.Options;
-using Shipping.Partner.Integration.Application;
+using Shipping.Partner.Integration.Application.Abstractions;
+using Shipping.Partner.Integration.Application.Configuration;
 
 namespace Shipping.Partner.Integration.Api.Middleware;
 
