@@ -1,4 +1,4 @@
-using Shipping.Partner.Integration.Application;
+using Shipping.Partner.Integration.Application.Abstractions;
 
 namespace Shipping.Partner.Integration.Infrastructure;
 

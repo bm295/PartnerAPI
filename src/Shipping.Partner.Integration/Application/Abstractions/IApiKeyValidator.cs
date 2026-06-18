@@ -1,4 +1,4 @@
-namespace Shipping.Partner.Integration.Application;
+namespace Shipping.Partner.Integration.Application.Abstractions;
 
 public interface IApiKeyValidator
 {

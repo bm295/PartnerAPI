@@ -1,9 +1,11 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Shipping.Partner.Integration.Api.Middleware;
+using Shipping.Partner.Integration.Application.Abstractions;
+using Shipping.Partner.Integration.Application.Configuration;
 using Shipping.Partner.Integration.Infrastructure;
 
-namespace Shipping.Partner.Integration.Application;
+namespace Shipping.Partner.Integration.Application.DependencyInjection;
 
 public static class ShippingPartnerIntegrationServiceCollectionExtensions
 {
