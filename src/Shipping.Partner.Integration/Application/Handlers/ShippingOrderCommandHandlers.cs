@@ -2,24 +2,25 @@ using Shipping.Partner.Integration.Application.Abstractions;
 using Shipping.Partner.Integration.Application.Commands;
 using Shipping.Partner.Integration.Application.Cqrs;
 using Shipping.Partner.Integration.Application.Requests;
+using Shipping.Partner.Integration.Application.Results;
 using Shipping.Partner.Integration.Domain;
 
 namespace Shipping.Partner.Integration.Application.Handlers;
 
 public sealed class CreateShippingOrderCommandHandler(
     IShippingPartnerRepository partnerRepository,
-    IShippingOrderRepository orderRepository) : ICommandHandler<CreateShippingOrderCommand, CommandResult<ShippingOrder>>
+    IShippingOrderRepository orderRepository) : ICommandHandler<CreateShippingOrderCommand, CommandResult<ShippingOrderCreationResult>>
 {
-    public CommandResult<ShippingOrder> Handle(CreateShippingOrderCommand command)
+    public CommandResult<ShippingOrderCreationResult> Handle(CreateShippingOrderCommand command)
     {
         if (!partnerRepository.Exists(command.PartnerId))
         {
-            return CommandResult<ShippingOrder>.Failure("Unknown partner.");
+            return CommandResult<ShippingOrderCreationResult>.Failure("Unknown partner.");
         }
 
         if (command.TotalWeightKg <= 0)
         {
-            return CommandResult<ShippingOrder>.Failure("TotalWeightKg must be greater than zero.");
+            return CommandResult<ShippingOrderCreationResult>.Failure("TotalWeightKg must be greater than zero.");
         }
 
         var order = orderRepository.Create(new CreateShippingOrderRequest(
@@ -30,6 +31,6 @@ public sealed class CreateShippingOrderCommandHandler(
             command.ServiceLevel,
             command.TotalWeightKg));
 
-        return CommandResult<ShippingOrder>.Success(order);
+        return CommandResult<ShippingOrderCreationResult>.Success(order);
     }
 }

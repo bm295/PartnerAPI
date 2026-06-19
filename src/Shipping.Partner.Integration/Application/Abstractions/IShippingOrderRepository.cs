@@ -1,5 +1,6 @@
 using Shipping.Partner.Integration.Domain;
 using Shipping.Partner.Integration.Application.Requests;
+using Shipping.Partner.Integration.Application.Results;
 
 namespace Shipping.Partner.Integration.Application.Abstractions;
 
@@ -7,5 +8,5 @@ public interface IShippingOrderRepository
 {
     IReadOnlyCollection<ShippingOrder> GetAll();
     IReadOnlyCollection<ShippingOrder> GetByPartnerId(Guid partnerId);
-    ShippingOrder Create(CreateShippingOrderRequest request);
+    ShippingOrderCreationResult Create(CreateShippingOrderRequest request);
 }
