@@ -3,6 +3,7 @@ using Shipping.Partner.Integration.Application.Commands;
 using Shipping.Partner.Integration.Application.Cqrs;
 using Shipping.Partner.Integration.Application.Queries;
 using Shipping.Partner.Integration.Application.Requests;
+using Shipping.Partner.Integration.Application.Results;
 using Shipping.Partner.Integration.Domain;
 
 namespace Shipping.Partner.Integration.Api.Endpoints;
@@ -60,7 +61,7 @@ public static class ShippingPartnerIntegrationApp
 
         app.MapPost("/shipping-orders", (
             CreateShippingOrderRequest request,
-            ICommandHandler<CreateShippingOrderCommand, CommandResult<ShippingOrder>> handler) =>
+            ICommandHandler<CreateShippingOrderCommand, CommandResult<ShippingOrderCreationResult>> handler) =>
         {
             var result = handler.Handle(new CreateShippingOrderCommand(
                 request.PartnerId,
@@ -70,9 +71,15 @@ public static class ShippingPartnerIntegrationApp
                 request.ServiceLevel,
                 request.TotalWeightKg));
 
-            return result.Succeeded
-                ? Results.Created($"/shipping-orders/{result.Value!.Id}", result.Value)
-                : Results.BadRequest(new { error = result.Error });
+            if (!result.Succeeded)
+            {
+                return Results.BadRequest(new { error = result.Error });
+            }
+
+            var orderResult = result.Value!;
+            return orderResult.Created
+                ? Results.Created($"/shipping-orders/{orderResult.Order.Id}", orderResult.Order)
+                : Results.Ok(orderResult.Order);
         });
 
         app.MapGet("/shipping-orders", (

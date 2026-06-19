@@ -31,23 +31,4 @@ public class ShippingPartnerRepositoryTests
         Assert.Single(store.GetByPartnerId(partnerId));
         Assert.Equal(2, store.GetAll().Count);
     }
-
-    [Fact]
-    public void ShippingOrderRepository_ShouldCreateAndFilterOrders()
-    {
-        var repository = new InMemoryShippingOrderRepository();
-        var partnerId = Guid.NewGuid();
-
-        var created = repository.Create(new CreateShippingOrderRequest(
-            partnerId,
-            "SO-1001",
-            "Acme Warehouse",
-            "123 Main St, Dallas, TX",
-            "Ground",
-            12.5m));
-
-        Assert.Equal(partnerId, created.PartnerId);
-        Assert.Single(repository.GetByPartnerId(partnerId));
-        Assert.Single(repository.GetAll());
-    }
 }

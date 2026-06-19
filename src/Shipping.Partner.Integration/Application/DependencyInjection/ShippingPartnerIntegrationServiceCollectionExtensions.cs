@@ -7,6 +7,7 @@ using Shipping.Partner.Integration.Application.Configuration;
 using Shipping.Partner.Integration.Application.Cqrs;
 using Shipping.Partner.Integration.Application.Handlers;
 using Shipping.Partner.Integration.Application.Queries;
+using Shipping.Partner.Integration.Application.Results;
 using Shipping.Partner.Integration.Domain;
 using Shipping.Partner.Integration.Infrastructure;
 
@@ -28,7 +29,7 @@ public static class ShippingPartnerIntegrationServiceCollectionExtensions
         services.AddSingleton<IApiKeyValidator, ConfigurationApiKeyValidator>();
         services.AddSingleton<ICommandHandler<ConnectShippingPartnerCommand, ShippingPartnerConnection>, ConnectShippingPartnerCommandHandler>();
         services.AddSingleton<ICommandHandler<RecordShipmentEventCommand, CommandResult<ShipmentEventRecord>>, RecordShipmentEventCommandHandler>();
-        services.AddSingleton<ICommandHandler<CreateShippingOrderCommand, CommandResult<ShippingOrder>>, CreateShippingOrderCommandHandler>();
+        services.AddSingleton<ICommandHandler<CreateShippingOrderCommand, CommandResult<ShippingOrderCreationResult>>, CreateShippingOrderCommandHandler>();
         services.AddSingleton<IQueryHandler<GetShippingPartnersQuery, IReadOnlyCollection<ShippingPartnerConnection>>, GetShippingPartnersQueryHandler>();
         services.AddSingleton<IQueryHandler<GetShippingPartnerByIdQuery, ShippingPartnerConnection?>, GetShippingPartnerByIdQueryHandler>();
         services.AddSingleton<IQueryHandler<GetShipmentEventsQuery, IReadOnlyCollection<ShipmentEventRecord>>, GetShipmentEventsQueryHandler>();

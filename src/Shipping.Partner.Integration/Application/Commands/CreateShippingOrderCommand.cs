@@ -1,5 +1,5 @@
 using Shipping.Partner.Integration.Application.Cqrs;
-using Shipping.Partner.Integration.Domain;
+using Shipping.Partner.Integration.Application.Results;
 
 namespace Shipping.Partner.Integration.Application.Commands;
 
@@ -9,4 +9,4 @@ public sealed record CreateShippingOrderCommand(
     string DestinationName,
     string DestinationAddress,
     string ServiceLevel,
-    decimal TotalWeightKg) : ICommand<CommandResult<ShippingOrder>>;
+    decimal TotalWeightKg) : ICommand<CommandResult<ShippingOrderCreationResult>>;
