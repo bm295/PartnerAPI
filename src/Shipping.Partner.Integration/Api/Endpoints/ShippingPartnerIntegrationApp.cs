@@ -4,7 +4,7 @@ using Shipping.Partner.Integration.Application.Cqrs;
 using Shipping.Partner.Integration.Application.Queries;
 using Shipping.Partner.Integration.Application.Requests;
 using Shipping.Partner.Integration.Application.Results;
-using Shipping.Partner.Integration.Domain;
+using Shipping.Partner.Integration.Domain.Entities;
 
 namespace Shipping.Partner.Integration.Api.Endpoints;
 
@@ -46,7 +46,7 @@ public static class ShippingPartnerIntegrationApp
             var result = handler.Handle(new RecordShipmentEventCommand(
                 request.PartnerId,
                 request.TrackingNumber,
-                request.Status,
+                request.Status.ToString(),
                 request.Location,
                 request.OccurredAtUtc));
 

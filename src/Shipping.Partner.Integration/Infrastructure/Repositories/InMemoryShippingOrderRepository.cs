@@ -2,9 +2,9 @@ using System.Collections.Concurrent;
 using Shipping.Partner.Integration.Application.Abstractions;
 using Shipping.Partner.Integration.Application.Requests;
 using Shipping.Partner.Integration.Application.Results;
-using Shipping.Partner.Integration.Domain;
+using Shipping.Partner.Integration.Domain.Entities;
 
-namespace Shipping.Partner.Integration.Infrastructure;
+namespace Shipping.Partner.Integration.Infrastructure.Repositories;
 
 public sealed class InMemoryShippingOrderRepository : IShippingOrderRepository
 {

@@ -2,7 +2,7 @@ using Shipping.Partner.Integration.Application.Abstractions;
 using Shipping.Partner.Integration.Application.Commands;
 using Shipping.Partner.Integration.Application.Cqrs;
 using Shipping.Partner.Integration.Application.Requests;
-using Shipping.Partner.Integration.Domain;
+using Shipping.Partner.Integration.Domain.Entities;
 
 namespace Shipping.Partner.Integration.Application.Handlers;
 

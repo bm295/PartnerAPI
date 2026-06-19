@@ -1,6 +1,6 @@
 using Shipping.Partner.Integration.Application.Abstractions;
 
-namespace Shipping.Partner.Integration.Infrastructure;
+namespace Shipping.Partner.Integration.Infrastructure.Validation;
 
 public sealed class ConfigurationApiKeyValidator : IApiKeyValidator
 {

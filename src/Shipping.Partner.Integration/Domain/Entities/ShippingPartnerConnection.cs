@@ -1,4 +1,4 @@
-namespace Shipping.Partner.Integration.Domain;
+namespace Shipping.Partner.Integration.Domain.Entities;
 
 public sealed record ShippingPartnerConnection(
     Guid Id,

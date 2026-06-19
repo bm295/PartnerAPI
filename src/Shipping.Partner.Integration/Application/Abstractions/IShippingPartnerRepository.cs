@@ -1,4 +1,4 @@
-using Shipping.Partner.Integration.Domain;
+using Shipping.Partner.Integration.Domain.Entities;
 using Shipping.Partner.Integration.Application.Requests;
 
 namespace Shipping.Partner.Integration.Application.Abstractions;
