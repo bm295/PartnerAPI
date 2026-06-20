@@ -31,10 +31,13 @@ public static class ShippingPartnerIntegrationServiceCollectionExtensions
         });
         services.Configure<ShippingPartnerIntegrationOptions>(
             configuration.GetSection(ShippingPartnerIntegrationOptions.SectionName));
+        services.Configure<PartnerCredentialOptions>(
+            configuration.GetSection(PartnerCredentialOptions.SectionName));
         services.AddSingleton<IShippingPartnerRepository, InMemoryShippingPartnerRepository>();
         services.AddSingleton<IShipmentEventStore, InMemoryShipmentEventStore>();
         services.AddSingleton<IShippingOrderRepository, InMemoryShippingOrderRepository>();
-        services.AddSingleton<IApiKeyValidator, ConfigurationApiKeyValidator>();
+        services.AddSingleton<IPartnerCredentialRepository, InMemoryPartnerCredentialRepository>();
+        services.AddSingleton<IApiKeyValidator, PartnerCredentialApiKeyValidator>();
         services.AddSingleton<ICommandHandler<ConnectShippingPartnerCommand, ShippingPartnerConnection>, ConnectShippingPartnerCommandHandler>();
         services.AddSingleton<ICommandHandler<RecordShipmentEventCommand, CommandResult<ShipmentEventRecord>>, RecordShipmentEventCommandHandler>();
         services.AddSingleton<ICommandHandler<CreateShippingOrderCommand, CommandResult<ShippingOrderCreationResult>>, CreateShippingOrderCommandHandler>();

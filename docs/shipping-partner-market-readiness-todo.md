@@ -15,10 +15,10 @@ This checklist breaks market readiness into small, implementation-ready tasks. E
 
 ## 2. Authentication, authorization, and credential lifecycle
 
-- [ ] Create class `PartnerCredential` in `Domain/Entities` with `Id`, `PartnerId`, `HashedSecret`, `CreatedAtUtc`, `ExpiresAtUtc`, `RevokedAtUtc`, and `LastUsedAtUtc` fields.
-- [ ] Create interface `IPartnerCredentialRepository` in `Application/Abstractions` for creating, rotating, revoking, and looking up credentials.
-- [ ] Create class `PartnerCredentialOptions` in `Application/Configuration` with secret length, expiration period, allowed clock skew, and header name settings.
-- [ ] Replace `ConfigurationApiKeyValidator` with `PartnerCredentialApiKeyValidator` that validates hashed partner-specific credentials instead of a fixed `change-me` value.
+- [x] Create class `PartnerCredential` in `Domain/Entities` with `Id`, `PartnerId`, `HashedSecret`, `CreatedAtUtc`, `ExpiresAtUtc`, `RevokedAtUtc`, and `LastUsedAtUtc` fields.
+- [x] Create interface `IPartnerCredentialRepository` in `Application/Abstractions` for creating, rotating, revoking, and looking up credentials.
+- [x] Create class `PartnerCredentialOptions` in `Application/Configuration` with secret length, expiration period, allowed clock skew, and header name settings.
+- [x] Replace `ConfigurationApiKeyValidator` with `PartnerCredentialApiKeyValidator` that validates hashed partner-specific credentials instead of a fixed `change-me` value.
 - [ ] Create class `ApiKeyHashingService` with methods `HashSecret(string secret)` and `VerifySecret(string secret, string hash)`.
 - [ ] Create endpoint `POST /shipping-partners/{partnerId}/credentials` for issuing a new credential to an existing partner.
 - [ ] Create endpoint `POST /shipping-partners/{partnerId}/credentials/{credentialId}/rotate` for replacing an active credential.

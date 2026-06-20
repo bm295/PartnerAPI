@@ -7,12 +7,12 @@ namespace Shipping.Partner.Integration.Api.Middleware;
 public sealed class ShippingPartnerApiKeyMiddleware
 {
     private readonly RequestDelegate _next;
-    private readonly IOptions<ShippingPartnerIntegrationOptions> _options;
+    private readonly IOptions<PartnerCredentialOptions> _options;
     private readonly IApiKeyValidator _validator;
 
     public ShippingPartnerApiKeyMiddleware(
         RequestDelegate next,
-        IOptions<ShippingPartnerIntegrationOptions> options,
+        IOptions<PartnerCredentialOptions> options,
         IApiKeyValidator validator)
     {
         _next = next;
@@ -29,7 +29,7 @@ public sealed class ShippingPartnerApiKeyMiddleware
             return;
         }
 
-        var headerName = _options.Value.ApiKeyHeaderName;
+        var headerName = _options.Value.HeaderName;
         if (!context.Request.Headers.TryGetValue(headerName, out var apiKey) || string.IsNullOrWhiteSpace(apiKey))
         {
             context.Response.StatusCode = StatusCodes.Status401Unauthorized;
