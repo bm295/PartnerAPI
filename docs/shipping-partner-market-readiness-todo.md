@@ -4,14 +4,14 @@ This checklist breaks market readiness into small, implementation-ready tasks. E
 
 ## 1. Product definition and partner contract
 
-- [ ] Create `docs/api-contract/shipping-partner-openapi-review.md` and document every current endpoint, request field, response field, status code, and error shape.
-- [ ] Create `docs/api-contract/partner-onboarding-flow.md` describing how a new shipping partner receives credentials, tests the API, and goes live.
-- [ ] Create `docs/api-contract/idempotency-rules.md` defining idempotency keys for partner connection, order creation, shipment event ingestion, and webhook delivery.
-- [ ] Create `docs/api-contract/versioning-policy.md` defining URL or header versioning, deprecation windows, and breaking-change communication rules.
-- [ ] Create `docs/api-contract/service-levels.md` listing supported shipping service levels, display names, carrier mappings, and validation rules.
-- [ ] Create `docs/api-contract/error-catalog.md` with stable error codes such as `PARTNER_NOT_FOUND`, `INVALID_API_KEY`, `DUPLICATE_EVENT`, and `INVALID_STATUS_TRANSITION`.
-- [ ] Create `docs/api-contract/status-lifecycle.md` explaining valid shipment status transitions and examples for each transition.
-- [ ] Create `docs/api-contract/go-live-checklist.md` that partner success teams can use before enabling production credentials.
+- [x] Create `docs/api-contract/shipping-partner-openapi-review.md` and document every current endpoint, request field, response field, status code, and error shape.
+- [x] Create `docs/api-contract/partner-onboarding-flow.md` describing how a new shipping partner receives credentials, tests the API, and goes live.
+- [x] Create `docs/api-contract/idempotency-rules.md` defining idempotency keys for partner connection, order creation, shipment event ingestion, and webhook delivery.
+- [x] Create `docs/api-contract/versioning-policy.md` defining URL or header versioning, deprecation windows, and breaking-change communication rules.
+- [x] Create `docs/api-contract/service-levels.md` listing supported shipping service levels, display names, carrier mappings, and validation rules.
+- [x] Create `docs/api-contract/error-catalog.md` with stable error codes such as `PARTNER_NOT_FOUND`, `INVALID_API_KEY`, `DUPLICATE_EVENT`, and `INVALID_STATUS_TRANSITION`.
+- [x] Create `docs/api-contract/status-lifecycle.md` explaining valid shipment status transitions and examples for each transition.
+- [x] Create `docs/api-contract/go-live-checklist.md` that partner success teams can use before enabling production credentials.
 
 ## 2. Authentication, authorization, and credential lifecycle
 
