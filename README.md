@@ -31,6 +31,10 @@ curl -X POST \
   -d "grant_type=client_credentials&client_id=partner-api&client_secret=<secret>"
 ```
 
+## Shipping partner market readiness
+
+A detailed implementation checklist for preparing the shipping partner integration API for market launch is available in [`docs/shipping-partner-market-readiness-todo.md`](docs/shipping-partner-market-readiness-todo.md).
+
 ## Test
 ```bash
 dotnet test PartnerAPI.sln
