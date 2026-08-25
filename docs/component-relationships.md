@@ -4,10 +4,15 @@ This document explains how the projects and runtime components in PartnerAPI rel
 
 ## High-level structure
 
-PartnerAPI is a small .NET solution with two projects:
+PartnerAPI is a small .NET solution with two applications and their test projects:
 
 - `src/Partner.Api` contains the ASP.NET Core minimal API application.
 - `tests/Partner.Api.Tests` contains xUnit tests that exercise repository behavior through a project reference to the API project.
+- `src/Shipping.Partner.Integration` contains the layered shipping-partner integration application.
+- `tests/Shipping.Partner.Integration.Tests` contains its behavioral and architecture-boundary tests.
+
+The remainder of this document describes `Partner.Api`. See
+[`shipping-partner-integration-flow.md`](shipping-partner-integration-flow.md) for the shipping integration's component and request-flow documentation.
 
 At runtime, the API exposes a public health endpoint and protected partner CRUD endpoints. The protected endpoints use JWT bearer authentication configured from the `Keycloak` section in `appsettings.json`.
 

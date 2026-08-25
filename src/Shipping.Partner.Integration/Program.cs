@@ -1,5 +1,5 @@
 using Shipping.Partner.Integration.Api.Endpoints;
-using Shipping.Partner.Integration.Application.DependencyInjection;
+using Shipping.Partner.Integration.Api.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
 

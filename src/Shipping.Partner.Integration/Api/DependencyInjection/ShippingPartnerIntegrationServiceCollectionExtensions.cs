@@ -15,7 +15,7 @@ using Shipping.Partner.Integration.Infrastructure.Stores;
 using Shipping.Partner.Integration.Infrastructure.Validation;
 using System.Text.Json.Serialization;
 
-namespace Shipping.Partner.Integration.Application.DependencyInjection;
+namespace Shipping.Partner.Integration.Api.DependencyInjection;
 
 public static class ShippingPartnerIntegrationServiceCollectionExtensions
 {
@@ -29,14 +29,13 @@ public static class ShippingPartnerIntegrationServiceCollectionExtensions
         {
             options.SerializerOptions.Converters.Add(new JsonStringEnumConverter());
         });
-        services.Configure<ShippingPartnerIntegrationOptions>(
-            configuration.GetSection(ShippingPartnerIntegrationOptions.SectionName));
         services.Configure<PartnerCredentialOptions>(
             configuration.GetSection(PartnerCredentialOptions.SectionName));
         services.AddSingleton<IShippingPartnerRepository, InMemoryShippingPartnerRepository>();
         services.AddSingleton<IShipmentEventStore, InMemoryShipmentEventStore>();
         services.AddSingleton<IShippingOrderRepository, InMemoryShippingOrderRepository>();
         services.AddSingleton<IPartnerCredentialRepository, InMemoryPartnerCredentialRepository>();
+        services.AddSingleton(TimeProvider.System);
         services.AddSingleton<IApiKeyValidator, PartnerCredentialApiKeyValidator>();
         services.AddSingleton<ICommandHandler<ConnectShippingPartnerCommand, ShippingPartnerConnection>, ConnectShippingPartnerCommandHandler>();
         services.AddSingleton<ICommandHandler<RecordShipmentEventCommand, CommandResult<ShipmentEventRecord>>, RecordShipmentEventCommandHandler>();

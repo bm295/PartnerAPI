@@ -1,6 +1,6 @@
-namespace Shipping.Partner.Integration.Application.Requests;
+namespace Shipping.Partner.Integration.Application.Models;
 
-public sealed record CreateShippingOrderRequest(
+public sealed record NewShippingOrder(
     Guid PartnerId,
     string OrderNumber,
     string DestinationName,
