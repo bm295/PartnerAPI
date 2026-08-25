@@ -1,6 +1,6 @@
 using System.Collections.Concurrent;
 using Shipping.Partner.Integration.Application.Abstractions;
-using Shipping.Partner.Integration.Application.Requests;
+using Shipping.Partner.Integration.Application.Models;
 using Shipping.Partner.Integration.Application.Results;
 using Shipping.Partner.Integration.Domain.Entities;
 
@@ -18,10 +18,10 @@ public sealed class InMemoryShippingOrderRepository : IShippingOrderRepository
     public IReadOnlyCollection<ShippingOrder> GetByPartnerId(Guid partnerId) =>
         _orders.Values.Where(order => order.PartnerId == partnerId).OrderBy(order => order.CreatedAtUtc).ToArray();
 
-    public ShippingOrderCreationResult Create(CreateShippingOrderRequest request)
+    public ShippingOrderCreationResult Create(NewShippingOrder order)
     {
-        var orderNumber = request.OrderNumber.Trim();
-        var key = CreateIdempotencyKey(request.PartnerId, orderNumber);
+        var orderNumber = order.OrderNumber.Trim();
+        var key = CreateIdempotencyKey(order.PartnerId, orderNumber);
 
         lock (_createLock)
         {
@@ -31,19 +31,19 @@ public sealed class InMemoryShippingOrderRepository : IShippingOrderRepository
                 return new ShippingOrderCreationResult(existingOrder, false);
             }
 
-            var order = new ShippingOrder(
+            var storedOrder = new ShippingOrder(
                 Guid.NewGuid(),
-                request.PartnerId,
+                order.PartnerId,
                 orderNumber,
-                request.DestinationName.Trim(),
-                request.DestinationAddress.Trim(),
-                request.ServiceLevel.Trim(),
-                request.TotalWeightKg,
+                order.DestinationName.Trim(),
+                order.DestinationAddress.Trim(),
+                order.ServiceLevel.Trim(),
+                order.TotalWeightKg,
                 DateTimeOffset.UtcNow);
 
-            _orders[order.Id] = order;
-            _orderIdsByIdempotencyKey[key] = order.Id;
-            return new ShippingOrderCreationResult(order, true);
+            _orders[storedOrder.Id] = storedOrder;
+            _orderIdsByIdempotencyKey[key] = storedOrder.Id;
+            return new ShippingOrderCreationResult(storedOrder, true);
         }
     }
 

@@ -1,6 +1,6 @@
 using Shipping.Partner.Integration.Domain.Enums;
 
-namespace Shipping.Partner.Integration.Application.Requests;
+namespace Shipping.Partner.Integration.Api.Contracts;
 
 public sealed record ShipmentEventRequest(
     Guid PartnerId,

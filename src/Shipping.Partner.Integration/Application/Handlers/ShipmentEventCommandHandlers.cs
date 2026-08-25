@@ -1,7 +1,7 @@
 using Shipping.Partner.Integration.Application.Abstractions;
 using Shipping.Partner.Integration.Application.Commands;
 using Shipping.Partner.Integration.Application.Cqrs;
-using Shipping.Partner.Integration.Application.Requests;
+using Shipping.Partner.Integration.Application.Models;
 using Shipping.Partner.Integration.Domain.Entities;
 using Shipping.Partner.Integration.Domain.Enums;
 
@@ -23,7 +23,7 @@ public sealed class RecordShipmentEventCommandHandler(
             return CommandResult<ShipmentEventRecord>.Failure("Invalid shipment status.");
         }
 
-        var eventRecord = store.Append(new ShipmentEventRequest(
+        var eventRecord = store.Append(new NewShipmentEvent(
             command.PartnerId,
             command.TrackingNumber,
             status,

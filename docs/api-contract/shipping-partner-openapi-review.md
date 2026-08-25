@@ -6,7 +6,7 @@ This review documents the current `Shipping.Partner.Integration` HTTP surface as
 
 | Item | Current behavior |
 | --- | --- |
-| API key header | Configured by `ShippingPartnerIntegrationOptions.ApiKeyHeaderName`; default configuration uses `X-Shipping-Partner-Key`. |
+| API key header | Configured by `PartnerCredentialOptions.HeaderName`; default configuration uses `X-Shipping-Partner-Key`. |
 | Missing API key | `401 Unauthorized` with `{ "error": "Missing {headerName} header." }`. |
 | Invalid API key | `403 Forbidden` with `{ "error": "Invalid shipping partner API key." }`. |
 | Success content type | JSON. |

@@ -6,8 +6,8 @@ This document explains how `src/Shipping.Partner.Integration` works at runtime a
 
 The shipping partner integration project is a minimal ASP.NET Core API organized with Clean Architecture-style folders:
 
-- `Api` contains middleware and endpoint wiring.
-- `Application` contains request contracts, CQRS commands and queries, handlers, repository interfaces, configuration options, and dependency injection registration.
+- `Api` contains HTTP contracts, middleware, endpoint wiring, and dependency injection registration.
+- `Application` contains CQRS commands and queries, handlers, persistence input models, repository interfaces, and configuration options.
 - `Domain` contains the core shipping partner, shipment event, and shipping order models.
 - `Infrastructure` contains in-memory implementations and API key validation.
 
@@ -27,9 +27,10 @@ All non-public routes require the shipping partner API key header configured in 
 `AddShippingPartnerIntegration(...)` registers:
 
 - endpoint metadata and Swagger generation
-- `ShippingPartnerIntegrationOptions` from configuration
+- `PartnerCredentialOptions` from configuration
 - singleton in-memory repositories and event stores
-- `ConfigurationApiKeyValidator`
+- the system `TimeProvider` used by credential expiry validation
+- `PartnerCredentialApiKeyValidator`
 - command handlers for connecting partners, creating orders, and recording shipment events
 - query handlers for listing and fetching partners, listing orders, and listing shipment events
 - the API key middleware and authorization services
@@ -41,12 +42,14 @@ All non-public routes require the shipping partner API key header configured in 
 Its job is to:
 
 - let `/health` and `/swagger` pass through without authentication
-- read the configured API key header name from `ShippingPartnerIntegrationOptions`
+- read the configured API key header name from `PartnerCredentialOptions`
 - reject requests with a missing key using `401 Unauthorized`
 - reject requests with an invalid key using `403 Forbidden`
 - forward valid requests to the endpoint pipeline
 
-The middleware validates the configured header value through `IApiKeyValidator`. The current `ConfigurationApiKeyValidator` implementation accepts the fixed value `change-me`, while the header name comes from configuration.
+The middleware validates the configured header value through `IApiKeyValidator`. The current
+`PartnerCredentialApiKeyValidator` hashes the supplied secret, looks up an active partner credential,
+applies the configured clock skew, and records successful use; the header name also comes from credential configuration.
 
 This middleware keeps partner access control separate from business logic and makes the authorization rule easy to swap later for JWT, mTLS, or a partner-specific auth provider.
 
@@ -138,16 +141,31 @@ sequenceDiagram
 | `Api` | `src/Shipping.Partner.Integration/Api` | Hosts middleware and endpoint mapping logic. |
 | `Api/Middleware/ShippingPartnerApiKeyMiddleware.cs` | `src/Shipping.Partner.Integration/Api/Middleware/ShippingPartnerApiKeyMiddleware.cs` | Validates the shipping partner API key header and blocks unauthorized requests before they reach the endpoints. |
 | `Api/Endpoints/ShippingPartnerIntegrationApp.cs` | `src/Shipping.Partner.Integration/Api/Endpoints/ShippingPartnerIntegrationApp.cs` | Maps HTTP routes, builds command/query objects, and converts handler results into HTTP responses. |
-| `Application/DependencyInjection` | `src/Shipping.Partner.Integration/Application/DependencyInjection` | Registers options, infrastructure services, middleware, and CQRS handlers. |
+| `Api/DependencyInjection` | `src/Shipping.Partner.Integration/Api/DependencyInjection` | Provides composition-root registration for options, infrastructure services, middleware, and CQRS handlers. |
 | `Application/Cqrs` | `src/Shipping.Partner.Integration/Application/Cqrs` | Defines command/query marker interfaces, handler interfaces, and `CommandResult`. |
 | `Application/Commands` | `src/Shipping.Partner.Integration/Application/Commands` | Defines write operations sent from endpoints to command handlers. |
 | `Application/Queries` | `src/Shipping.Partner.Integration/Application/Queries` | Defines read operations sent from endpoints to query handlers. |
 | `Application/Handlers` | `src/Shipping.Partner.Integration/Application/Handlers` | Implements business flow for commands and queries. |
-| `Application/Requests` | `src/Shipping.Partner.Integration/Application/Requests` | Defines HTTP request DTOs that are also passed into repositories/stores for object creation. |
+| `Api/Contracts` | `src/Shipping.Partner.Integration/Api/Contracts` | Defines HTTP request DTOs consumed only by the endpoint adapter. |
+| `Application/Models` | `src/Shipping.Partner.Integration/Application/Models` | Defines persistence input models passed through application-owned repository and store ports. |
 | `Application/Results` | `src/Shipping.Partner.Integration/Application/Results` | Defines application result DTOs, including whether a shipping order was newly created or returned idempotently. |
 | `Application/Abstractions` | `src/Shipping.Partner.Integration/Application/Abstractions` | Defines repository, event store, and API key validation contracts. |
 | `Domain` | `src/Shipping.Partner.Integration/Domain` | Holds the core data models for partners, orders, and events. |
 | `Infrastructure` | `src/Shipping.Partner.Integration/Infrastructure` | Implements in-memory repositories, event storage, and API key validation. |
+
+## Dependency direction
+
+- `Api` translates HTTP contracts into application commands and queries.
+- `Application` depends on domain entities and rules, but does not import `Api` or `Infrastructure`.
+- Persistence ports expose application-owned `NewShippingPartner`, `NewShippingOrder`, and `NewShipmentEvent`
+  models rather than HTTP request contracts.
+- `Infrastructure` implements those application-owned ports and depends inward on `Application` and `Domain`.
+- `Program.cs` and `Api/DependencyInjection` are the outer composition boundary where concrete infrastructure
+  implementations are connected to application interfaces.
+
+This keeps HTTP schema changes from propagating into persistence implementations and keeps concrete infrastructure
+selection out of application workflows. `ArchitectureBoundaryTests` protects the persistence-port and composition-root
+conventions.
 
 ## Important behavior notes
 

@@ -1,5 +1,5 @@
 using Xunit;
-using Shipping.Partner.Integration.Application.Requests;
+using Shipping.Partner.Integration.Application.Models;
 using Shipping.Partner.Integration.Infrastructure.Repositories;
 
 namespace Shipping.Partner.Integration.Tests;
@@ -12,7 +12,7 @@ public class ShippingOrderRepositoryTests
         var repository = new InMemoryShippingOrderRepository();
         var partnerId = Guid.NewGuid();
 
-        var created = repository.Create(new CreateShippingOrderRequest(
+        var created = repository.Create(new NewShippingOrder(
             partnerId,
             "SO-1001",
             "Acme Warehouse",
@@ -32,14 +32,14 @@ public class ShippingOrderRepositoryTests
         var repository = new InMemoryShippingOrderRepository();
         var partnerId = Guid.NewGuid();
 
-        var first = repository.Create(new CreateShippingOrderRequest(
+        var first = repository.Create(new NewShippingOrder(
             partnerId,
             "SO-1001",
             "Acme Warehouse",
             "123 Main St, Dallas, TX",
             "Ground",
             12.5m));
-        var second = repository.Create(new CreateShippingOrderRequest(
+        var second = repository.Create(new NewShippingOrder(
             partnerId,
             " so-1001 ",
             "Changed Name",
@@ -59,14 +59,14 @@ public class ShippingOrderRepositoryTests
     {
         var repository = new InMemoryShippingOrderRepository();
 
-        var first = repository.Create(new CreateShippingOrderRequest(
+        var first = repository.Create(new NewShippingOrder(
             Guid.NewGuid(),
             "SO-1001",
             "Acme Warehouse",
             "123 Main St, Dallas, TX",
             "Ground",
             12.5m));
-        var second = repository.Create(new CreateShippingOrderRequest(
+        var second = repository.Create(new NewShippingOrder(
             Guid.NewGuid(),
             "SO-1001",
             "Acme Warehouse",

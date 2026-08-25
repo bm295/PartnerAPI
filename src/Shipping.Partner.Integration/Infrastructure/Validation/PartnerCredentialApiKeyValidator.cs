@@ -10,13 +10,16 @@ public sealed class PartnerCredentialApiKeyValidator : IApiKeyValidator
 {
     private readonly IPartnerCredentialRepository _credentials;
     private readonly IOptions<PartnerCredentialOptions> _options;
+    private readonly TimeProvider _timeProvider;
 
     public PartnerCredentialApiKeyValidator(
         IPartnerCredentialRepository credentials,
-        IOptions<PartnerCredentialOptions> options)
+        IOptions<PartnerCredentialOptions> options,
+        TimeProvider timeProvider)
     {
         _credentials = credentials;
         _options = options;
+        _timeProvider = timeProvider;
     }
 
     public bool IsValid(string apiKey)
@@ -26,7 +29,7 @@ public sealed class PartnerCredentialApiKeyValidator : IApiKeyValidator
             return false;
         }
 
-        var nowUtc = DateTimeOffset.UtcNow;
+        var nowUtc = _timeProvider.GetUtcNow();
         var hashedSecret = HashSecret(apiKey);
         var credential = _credentials.GetActiveByHashedSecret(
             hashedSecret,
