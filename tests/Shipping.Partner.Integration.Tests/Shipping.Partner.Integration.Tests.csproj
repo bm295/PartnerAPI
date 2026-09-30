@@ -14,4 +14,8 @@
     <ProjectReference Include="..\..\src\Shipping.Partner.Integration\Shipping.Partner.Integration.csproj" />
     <ProjectReference Include="..\..\src\Shipping.Partner.Sdk\Shipping.Partner.Sdk.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
 </Project>

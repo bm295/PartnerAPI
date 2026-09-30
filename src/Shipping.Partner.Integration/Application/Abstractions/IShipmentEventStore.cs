@@ -1,5 +1,5 @@
 using Shipping.Partner.Integration.Domain.Entities;
-using Shipping.Partner.Integration.Application.Requests;
+using Shipping.Partner.Integration.Application.Models;
 
 namespace Shipping.Partner.Integration.Application.Abstractions;
 
@@ -7,5 +7,5 @@ public interface IShipmentEventStore
 {
     IReadOnlyCollection<ShipmentEventRecord> GetAll();
     IReadOnlyCollection<ShipmentEventRecord> GetByPartnerId(Guid partnerId);
-    ShipmentEventRecord Append(ShipmentEventRequest request);
+    ShipmentEventRecord Append(NewShipmentEvent shipmentEvent);
 }

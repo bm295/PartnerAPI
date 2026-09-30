@@ -1,7 +1,7 @@
 using Shipping.Partner.Integration.Application.Abstractions;
 using Shipping.Partner.Integration.Application.Commands;
 using Shipping.Partner.Integration.Application.Cqrs;
-using Shipping.Partner.Integration.Application.Requests;
+using Shipping.Partner.Integration.Application.Models;
 using Shipping.Partner.Integration.Application.Results;
 using Shipping.Partner.Integration.Domain.Entities;
 
@@ -23,7 +23,7 @@ public sealed class CreateShippingOrderCommandHandler(
             return CommandResult<ShippingOrderCreationResult>.Failure("TotalWeightKg must be greater than zero.");
         }
 
-        var order = orderRepository.Create(new CreateShippingOrderRequest(
+        var order = orderRepository.Create(new NewShippingOrder(
             command.PartnerId,
             command.OrderNumber,
             command.DestinationName,

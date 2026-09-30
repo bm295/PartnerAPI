@@ -1,6 +1,6 @@
 using System.Collections.Concurrent;
 using Shipping.Partner.Integration.Application.Abstractions;
-using Shipping.Partner.Integration.Application.Requests;
+using Shipping.Partner.Integration.Application.Models;
 using Shipping.Partner.Integration.Domain.Entities;
 
 namespace Shipping.Partner.Integration.Infrastructure.Repositories;
@@ -14,12 +14,12 @@ public sealed class InMemoryShippingPartnerRepository : IShippingPartnerReposito
 
     public ShippingPartnerConnection? GetById(Guid id) => _partners.GetValueOrDefault(id);
 
-    public ShippingPartnerConnection Connect(ConnectShippingPartnerRequest request)
+    public ShippingPartnerConnection Connect(NewShippingPartner newPartner)
     {
         var partner = new ShippingPartnerConnection(
             Guid.NewGuid(),
-            request.Name.Trim(),
-            request.ExternalReference.Trim(),
+            newPartner.Name.Trim(),
+            newPartner.ExternalReference.Trim(),
             Convert.ToHexString(Guid.NewGuid().ToByteArray()),
             DateTimeOffset.UtcNow);
 
