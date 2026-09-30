@@ -12,5 +12,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\Shipping.Partner.Integration\Shipping.Partner.Integration.csproj" />
+    <ProjectReference Include="..\..\src\Shipping.Partner.Sdk\Shipping.Partner.Sdk.csproj" />
   </ItemGroup>
 </Project>

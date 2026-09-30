@@ -35,3 +35,27 @@ curl -X POST \
 ```bash
 dotnet test PartnerAPI.sln
 ```
+
+## Shipping Partner SDK
+
+`src/Shipping.Partner.Sdk` is a reusable NuGet library for the shipping integration API. It supports creating orders and listing orders for one partner. The SDK sends the `X-Shipping-Partner-Key` header and throws `PartnerApiException` for unsuccessful HTTP responses. An order with an existing order number may be returned by the API instead of created again. The SDK does not automatically retry POST requests.
+
+Pack it with `dotnet pack src/Shipping.Partner.Sdk/Shipping.Partner.Sdk.csproj -c Release`. A different repo can install the resulting `.nupkg` from a local or private NuGet feed, then configure it like this:
+
+```csharp
+using Shipping.Partner.Sdk;
+using Shipping.Partner.Sdk.Models;
+
+services.AddPartnerApi(options =>
+{
+    options.BaseUrl = new Uri(configuration["PartnerApi:BaseUrl"]!);
+    options.ApiKey = configuration["PartnerApi:ApiKey"]!;
+});
+
+// Inject IPartnerApiClient into a service:
+var order = await client.CreateOrderAsync(new CreateShippingOrderRequest(
+    partnerId, "ORDER-001", "Customer", "123 Main St", "standard", 1.5m));
+var orders = await client.GetOrdersAsync(partnerId);
+```
+
+The API key should come from the consuming app's secret configuration. Set `PARTNER_API_URL`, `PARTNER_API_KEY`, and `PARTNER_ID` to run the read-only example in `samples/Shipping.Partner.Sdk.Sample`.
