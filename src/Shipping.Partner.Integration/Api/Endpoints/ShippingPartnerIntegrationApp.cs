@@ -86,6 +86,26 @@ public static class ShippingPartnerIntegrationApp
             IQueryHandler<GetShippingOrdersQuery, IReadOnlyCollection<ShippingOrder>> handler,
             Guid? partnerId) => Results.Ok(handler.Handle(new GetShippingOrdersQuery(partnerId))));
 
+        app.MapPost("/shipping-orders/predict-delay", (
+            PredictDeliveryDelayRequest request,
+            IQueryHandler<PredictDeliveryDelayQuery, DeliveryDelayPrediction> handler) =>
+        {
+            try
+            {
+                return Results.Ok(handler.Handle(new PredictDeliveryDelayQuery(request.DistanceKm,
+                    request.TotalWeightKg, request.ServiceType, request.OrderHour, request.DayOfWeek,
+                    request.ActiveOrdersAtCreation)));
+            }
+            catch (ArgumentException ex)
+            {
+                return Results.Problem(statusCode: 400, title: "Invalid prediction input", detail: ex.Message);
+            }
+            catch (Shipping.Partner.Integration.Application.Abstractions.PredictionUnavailableException ex)
+            {
+                return Results.Problem(statusCode: 503, title: "Prediction unavailable", detail: ex.Message);
+            }
+        }).Produces<DeliveryDelayPrediction>().ProducesProblem(400).ProducesProblem(503);
+
         return app;
     }
 }
