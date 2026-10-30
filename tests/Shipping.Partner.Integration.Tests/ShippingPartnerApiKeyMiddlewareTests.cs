@@ -24,7 +24,7 @@ public class ShippingPartnerApiKeyMiddlewareTests
         var context = new DefaultHttpContext();
         context.Request.Headers["X-Custom-Partner-Key"] = "secret";
 
-        await middleware.InvokeAsync(context).ConfigureAwait(false);
+        await middleware.InvokeAsync(context).ConfigureAwait(true);
 
         Assert.True(nextCalled);
     }
@@ -46,7 +46,7 @@ public class ShippingPartnerApiKeyMiddlewareTests
         var context = new DefaultHttpContext();
         context.Request.Path = path;
 
-        await middleware.InvokeAsync(context).ConfigureAwait(false);
+        await middleware.InvokeAsync(context).ConfigureAwait(true);
 
         Assert.True(nextCalled);
         Assert.Equal(StatusCodes.Status200OK, context.Response.StatusCode);
@@ -62,12 +62,12 @@ public class ShippingPartnerApiKeyMiddlewareTests
         var context = new DefaultHttpContext();
         context.Response.Body = new MemoryStream();
 
-        await middleware.InvokeAsync(context).ConfigureAwait(false);
+        await middleware.InvokeAsync(context).ConfigureAwait(true);
 
         Assert.Equal(StatusCodes.Status401Unauthorized, context.Response.StatusCode);
         context.Response.Body.Position = 0;
         using var reader = new StreamReader(context.Response.Body);
-        Assert.Contains("Missing X-Custom-Partner-Key header.", await reader.ReadToEndAsync().ConfigureAwait(false));
+        Assert.Contains("Missing X-Custom-Partner-Key header.", await reader.ReadToEndAsync().ConfigureAwait(true));
     }
 
     [Fact]
@@ -85,7 +85,7 @@ public class ShippingPartnerApiKeyMiddlewareTests
         var context = new DefaultHttpContext();
         context.Request.Headers["X-Shipping-Partner-Key"] = "invalid";
 
-        await middleware.InvokeAsync(context).ConfigureAwait(false);
+        await middleware.InvokeAsync(context).ConfigureAwait(true);
 
         Assert.False(nextCalled);
         Assert.Equal(StatusCodes.Status403Forbidden, context.Response.StatusCode);

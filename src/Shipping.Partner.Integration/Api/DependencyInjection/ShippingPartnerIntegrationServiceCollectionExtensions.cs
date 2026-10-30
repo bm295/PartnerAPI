@@ -45,6 +45,15 @@ public static class ShippingPartnerIntegrationServiceCollectionExtensions
         services.AddSingleton<IQueryHandler<GetShipmentEventsQuery, IReadOnlyCollection<ShipmentEventRecord>>, GetShipmentEventsQueryHandler>();
         services.AddSingleton<IQueryHandler<GetShippingOrdersQuery, IReadOnlyCollection<ShippingOrder>>, GetShippingOrdersQueryHandler>();
         services.AddSingleton<ShippingPartnerApiKeyMiddleware>();
+        services.AddSingleton<IDeliveryDelayPredictor>(provider =>
+        {
+            var environment = provider.GetRequiredService<IHostEnvironment>();
+            var path = configuration["DeliveryDelayPrediction:ModelPath"] ?? "Models/delivery-delay.zip";
+            return new Shipping.Partner.Integration.Infrastructure.MachineLearning.MlNetDeliveryDelayPredictor(
+                Path.GetFullPath(path, environment.ContentRootPath),
+                provider.GetRequiredService<ILogger<Shipping.Partner.Integration.Infrastructure.MachineLearning.MlNetDeliveryDelayPredictor>>());
+        });
+        services.AddSingleton<IQueryHandler<PredictDeliveryDelayQuery, DeliveryDelayPrediction>, PredictDeliveryDelayQueryHandler>();
         services.AddAuthorization();
         return services;
     }

@@ -31,3 +31,9 @@ coveragereport/
 # Local environment files
 .env
 .env.*
+
+# Locally trained model artifacts
+artifacts/
+**/Models/*.zip
+**/Models/*.zip.json
+**/Models/*.zip.metrics.json

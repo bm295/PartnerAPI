@@ -74,3 +74,11 @@ var orders = await client.GetOrdersAsync(partnerId);
 ```
 
 The API key should come from the consuming app's secret configuration. Set `PARTNER_API_URL`, `PARTNER_API_KEY`, and `PARTNER_ID` to run the read-only example in `samples/Shipping.Partner.Sdk.Sample`.
+
+## Delivery delay prediction mini-project
+
+The shipping integration now exposes authenticated `POST /shipping-orders/predict-delay`.
+Train an ML.NET logistic regression model offline from the included synthetic CSV,
+then return a late-delivery prediction, estimated probability, selected threshold,
+and model version. The trainer exports held-out metrics, an always-on-time baseline,
+and calibration diagnostics. See [the complete training and API walkthrough](docs/delivery-delay-prediction.md).
